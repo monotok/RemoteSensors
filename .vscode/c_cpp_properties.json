@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/hammer/.arduino15/packages/arduino/hardware/avr/1.6.14/cores/arduino",
+                "/opt/arduino-1.8.4/hardware/arduino/avr/cores/arduino",
+                "/home/hammer/Documents/SoftwareDevelopment/Arduino/libraries/FourBitDisplay"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "/home/hammer/.arduino15/packages/arduino/hardware/avr/1.6.14/cores/arduino",
+                    "${workspaceRoot}",
+                    "/opt/arduino-1.8.4/hardware/arduino/avr/cores/arduino",
+                    "/home/hammer/Documents/SoftwareDevelopment/Arduino/libraries"
+                ]
+            },
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 3
+}

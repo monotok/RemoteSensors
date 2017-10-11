@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:nano",
+    "port": "/dev/ttyUSB4",
+    "sketch": "tempProbeBTNLEDVoltRFv3.ino",
+    "configuration": "cpu=atmega328"
+}
