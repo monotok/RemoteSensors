@@ -41,7 +41,7 @@ float temp, perBattLeft;
 struct sensor_Data 
 {
   int temperature; 
-  char sensorID[10];
+  char sensorID[10] = "BackBed";
   int perBatt;
 };
 sensor_Data sd;
@@ -58,30 +58,30 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
-void discoverOneWireDevices(OneWire availableSensors, byte ***foundSensors) 
-{
-  byte i;
-  byte addr[2][8];     // enough room for 2 sensors
-  byte addrSub;
-  *foundSensors = malloc(2*sizeof(byte)); //Create a 2d array in the heap for a single sensor
+// void discoverOneWireDevices(OneWire availableSensors, byte ***foundSensors) 
+// {
+//   byte i;
+//   byte addr[2][8];     // enough room for 2 sensors
+//   byte addrSub;
+//   *foundSensors = malloc(2*sizeof(byte)); //Create a 2d array in the heap for a single sensor
 
-  for(addrSub = 0; addrSub < 2; addrSub++)
-  {
-    if (availableSensors.search(addr[addrSub])) 
-    {
-      (*foundSensors)[addrSub] = malloc(8 * sizeof(byte));
-      for(i = 0; i < 8; i++)
-      {
-        foundSensors[addrSub][i] = addr[addrSub];
-      }
-      if (OneWire::crc8(addr[addrSub], 7) != addr[addrSub][7]) 
-      {
-        digitalWrite(lowBattLED, HIGH);
-        return;
-      } 
-    }
-  }
-}
+//   for(addrSub = 0; addrSub < 2; addrSub++)
+//   {
+//     if (availableSensors.search(addr[addrSub])) 
+//     {
+//       (*foundSensors)[addrSub] = malloc(8 * sizeof(byte));
+//       for(i = 0; i < 8; i++)
+//       {
+//         foundSensors[addrSub][i] = addr[addrSub];
+//       }
+//       if (OneWire::crc8(addr[addrSub], 7) != addr[addrSub][7]) 
+//       {
+//         digitalWrite(lowBattLED, HIGH);
+//         return;
+//       } 
+//     }
+//   }
+// }
 
 void transmitTemp()
 {
@@ -144,8 +144,8 @@ void setup()
   vw_setup(2000);       // Bits per sec
 
   //Discover connected onewire devices and store their serial number
-  byte **foundSensors;
-  discoverOneWireDevices(oneWire, &foundSensors);
+  // byte **foundSensors;
+  // discoverOneWireDevices(oneWire, &foundSensors);
 
   // for(int j = 0; j < 2; j++) 
   // {
@@ -155,8 +155,8 @@ void setup()
   //   }
   //   Serial.print("\n");
   // }
-  char *stringTest1 = foundSensors[0];
-  Serial.print(*stringTest1, HEX);
+  // char *stringTest1 = foundSensors[0];
+  // Serial.print(*stringTest1, HEX);
 
   // Start up the library
   sensors.begin();
