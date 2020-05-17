@@ -58,6 +58,31 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
+// void discoverOneWireDevices(OneWire availableSensors, byte ***foundSensors) 
+// {
+//   byte i;
+//   byte addr[2][8];     // enough room for 2 sensors
+//   byte addrSub;
+//   *foundSensors = malloc(2*sizeof(byte)); //Create a 2d array in the heap for a single sensor
+
+//   for(addrSub = 0; addrSub < 2; addrSub++)
+//   {
+//     if (availableSensors.search(addr[addrSub])) 
+//     {
+//       (*foundSensors)[addrSub] = malloc(8 * sizeof(byte));
+//       for(i = 0; i < 8; i++)
+//       {
+//         foundSensors[addrSub][i] = addr[addrSub];
+//       }
+//       if (OneWire::crc8(addr[addrSub], 7) != addr[addrSub][7]) 
+//       {
+//         digitalWrite(lowBattLED, HIGH);
+//         return;
+//       } 
+//     }
+//   }
+// }
+
 void transmitTemp()
 {
     sd.temperature = (int)(temp*100);
@@ -118,9 +143,24 @@ void setup()
     vw_set_tx_pin(transmit_pin);
     vw_setup(2000);       // Bits per sec
 
-    // Start up the library
-    sensors.begin();
-    sensors.setResolution(Probe03, 11);
+  //Discover connected onewire devices and store their serial number
+  // byte **foundSensors;
+  // discoverOneWireDevices(oneWire, &foundSensors);
+
+  // for(int j = 0; j < 2; j++)
+  // {
+  //   for(int i = 0; i < 8; i++)
+  //   {
+  //      Serial.print(foundSensors[j][i], HEX);
+  //   }
+  //   Serial.print("\n");
+  // }
+  // char *stringTest1 = foundSensors[0];
+  // Serial.print(*stringTest1, HEX);
+
+  // Start up the library
+  sensors.begin();
+  sensors.setResolution(Probe02, 11);
 
     //This turns off the display so there is no initial rubbish on the display upon power on!
     fbd.printToDisplay("////",4,"r");
