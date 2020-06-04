@@ -22,16 +22,25 @@
 
 #include <Arduino.h>
 #include "BtnController.hpp"
+#include "Sensors.hpp"
 
 #define PUSH_BTN_PIN 10
+#define ONE_WIRE_BUS 9
 
 // Declare classes here so they are in scope of loop method
 BtnController pushBtn1;
+// Enable sensors based on build flags
+Sensors sensors;
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature dt(&oneWire);
+DeviceAddress probe = { 0x28, 0xFF, 0xE5, 0x06, 0x02, 0x17, 0x04, 0xE5 }; //Miniature temp probe
 
 void setup()
 {
     Serial.begin(9600);
     pinMode(PUSH_BTN_PIN, INPUT);
+
+    sensors.add_temp_sensor();
 }
 
 void loop()
@@ -40,7 +49,10 @@ void loop()
     if(pushBtn1.debounceBtn())
     {
         //display value on screen. For now write to serial line
-        Serial.write("Hello");
+        Serial.print("Reading: ");
+        sensors.check_temp(dt, probe);
+        Serial.print(sensors.get_temp_sensor()->reading);
+        Serial.print("\n");
         pushBtn1.updateLastDebounceTime();
     }
     pushBtn1.reInitBtnState();
