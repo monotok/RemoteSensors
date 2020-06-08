@@ -148,6 +148,7 @@ void FourBitDisplay::printToDisplay(char* value, short arraySize ,char *justify)
             //take the latch pin high so the LEDs will light up:
 
             digitalWrite(_rclkPin, HIGH);
+            delay(2);
         }
     }
     else
@@ -178,6 +179,7 @@ void FourBitDisplay::printToDisplay(char* value, short arraySize ,char *justify)
             //take the latch pin high so the LEDs will light up:
 
             digitalWrite(_rclkPin, HIGH);
+            delay(2);
         }
     }
 }

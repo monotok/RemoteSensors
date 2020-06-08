@@ -21,6 +21,8 @@
  */
 
 #include <Arduino.h>
+#include <DisplayController.hpp>
+#include <Thread.h>
 #include "BtnController.hpp"
 #include "Sensors.hpp"
 
@@ -29,6 +31,9 @@
 
 // Declare classes here so they are in scope of loop method
 BtnController pushBtn1;
+DisplayController dc;
+Thread tempCheck = Thread();
+
 // Enable sensors based on build flags
 Sensors sensors;
 OneWire oneWire(ONE_WIRE_BUS);
@@ -39,21 +44,33 @@ void setup()
 {
     Serial.begin(9600);
     pinMode(PUSH_BTN_PIN, INPUT);
+    dc.initialiseDisplay();
 
     sensors.add_temp_sensor();
+    dt.begin();
+    dt.setResolution(probe, 11);
+
+    tempCheck.enabled = true; // Default enabled value is true
+    tempCheck.setInterval(8); // Setts the wanted interval to be 10ms
+    tempCheck.onRun([](){ sensors.check_temp(dt, probe); });
 }
 
 void loop()
 {
-    pushBtn1.initBtnState(PUSH_BTN_PIN);
-    if(pushBtn1.debounceBtn())
+//    pushBtn1.initBtnState(PUSH_BTN_PIN);
+//    if(pushBtn1.debounceBtn())
+//    {
+//        //display value on screen. For now write to serial line
+//        Serial.print("Reading: ");
+//        sensors.check_temp(dt, probe);
+//        Serial.print(sensors.get_temp_sensor()->reading);
+//        Serial.print("\n");
+//        pushBtn1.updateLastDebounceTime();
+//    }
+//    pushBtn1.reInitBtnState();
+    if(tempCheck.shouldRun())
     {
-        //display value on screen. For now write to serial line
-        Serial.print("Reading: ");
-        sensors.check_temp(dt, probe);
-        Serial.print(sensors.get_temp_sensor()->reading);
-        Serial.print("\n");
-        pushBtn1.updateLastDebounceTime();
+        tempCheck.run();
     }
-    pushBtn1.reInitBtnState();
+    dc.printFloat(sensors.get_temp_sensor()->reading);
 }
