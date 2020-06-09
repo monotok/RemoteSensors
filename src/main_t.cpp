@@ -57,17 +57,14 @@ void setup()
 
 void loop()
 {
-//    pushBtn1.initBtnState(PUSH_BTN_PIN);
-//    if(pushBtn1.debounceBtn())
-//    {
-//        //display value on screen. For now write to serial line
-//        Serial.print("Reading: ");
-//        sensors.check_temp(dt, probe);
-//        Serial.print(sensors.get_temp_sensor()->reading);
-//        Serial.print("\n");
-//        pushBtn1.updateLastDebounceTime();
-//    }
-//    pushBtn1.reInitBtnState();
+    pushBtn1.initBtnState(PUSH_BTN_PIN);
+    if(pushBtn1.debounceBtn())
+    {
+        //display value on screen. For now write to serial line
+        sensors.get_temp_sensor()->unit = 'f';
+        pushBtn1.updateLastDebounceTime();
+    }
+    pushBtn1.reInitBtnState();
     if(tempCheck.shouldRun())
     {
         tempCheck.run();

@@ -16,6 +16,7 @@ public:
     struct sensor {
         float reading;
         char type;
+        char unit;
         uint8_t precision;
         uint8_t length;
         bool display;
@@ -23,7 +24,7 @@ public:
 
     void add_temp_sensor();
     sensor* get_temp_sensor();
-    void check_temp(DallasTemperature dt, DeviceAddress probe);
+    void check_temp(DallasTemperature& dt, DeviceAddress probe);
 
 private:
     void enable_sensor(sensor *sensor);

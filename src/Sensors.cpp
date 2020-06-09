@@ -16,18 +16,25 @@ void Sensors::enable_sensor(sensor* sensor)
     }
 }
 
-void Sensors::check_temp(DallasTemperature dt, DeviceAddress probe)
+void Sensors::check_temp(DallasTemperature& dt, DeviceAddress probe)
 {
     dt.setWaitForConversion(false);  // makes it async
     dt.requestTemperatures();
     dt.setWaitForConversion(true);
-    get_temp_sensor()->reading = dt.getTempC(probe);
+    if (get_temp_sensor()->unit == 'c')
+    {
+        get_temp_sensor()->reading = dt.getTempC(probe);
+    } else
+    {
+        get_temp_sensor()->reading = dt.getTempF(probe);
+    }
+
 }
 
 void Sensors::add_temp_sensor()
 {
-    sensor temp{.reading=0, .type='t', .precision=2, .length=4, .display=true};
-    enabledSensors[TEMP_POS] = &temp;
+    auto* temp = new sensor{.reading=0, .type='t', .unit='c', .precision=2, .length=4, .display=true};
+    enabledSensors[TEMP_POS] = temp;
 }
 
 Sensors::sensor* Sensors::get_temp_sensor()
