@@ -24,7 +24,8 @@
 #include <DisplayController.hpp>
 #include <Thread.h>
 #include "BtnController.hpp"
-#include "Sensors.hpp"
+#include "Sensor_T.hpp"
+#include <Battery.hpp>
 
 #define PUSH_BTN_PIN 10
 #define ONE_WIRE_BUS 9
@@ -33,12 +34,14 @@
 BtnController pushBtn1;
 DisplayController dc;
 Thread tempCheck = Thread();
+OneWire oneWire(ONE_WIRE_BUS);
 
 // Enable sensors based on build flags
-Sensors sensors;
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature dt(&oneWire);
-DeviceAddress probe = { 0x28, 0xFF, 0xE5, 0x06, 0x02, 0x17, 0x04, 0xE5 }; //Miniature temp probe
+Battery battery = Battery(0.0, 5.0, 1.0, 6);
+Sensor_T temperature = Sensor_T(0, 't', 'c', 2, 4, oneWire);
+Sensor_T temperature2 = Sensor_T(33.76, 't', 'c', 2, 4, oneWire);
+
+
 
 void setup()
 {
@@ -48,13 +51,10 @@ void setup()
     dc.addSensorToDisplay(&temperature);
     dc.addSensorToDisplay(&temperature2);
 
-    sensors.add_temp_sensor();
-    dt.begin();
-    dt.setResolution(probe, 11);
 
     tempCheck.enabled = true; // Default enabled value is true
     tempCheck.setInterval(8); // Setts the wanted interval to be 10ms
-    tempCheck.onRun([](){ sensors.check_temp(dt, probe); });
+    tempCheck.onRun([](){ temperature.set_reading(); });
 }
 
 void loop()
@@ -63,7 +63,7 @@ void loop()
     if(pushBtn1.debounceBtn())
     {
         //display value on screen. For now write to serial line
-        sensors.get_temp_sensor()->unit = 'f';
+        dc.displayNext();
         pushBtn1.updateLastDebounceTime();
     }
     pushBtn1.reInitBtnState();
