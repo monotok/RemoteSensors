@@ -45,6 +45,8 @@ void setup()
     Serial.begin(9600);
     pinMode(PUSH_BTN_PIN, INPUT);
     dc.initialiseDisplay();
+    dc.addSensorToDisplay(&temperature);
+    dc.addSensorToDisplay(&temperature2);
 
     sensors.add_temp_sensor();
     dt.begin();
@@ -69,5 +71,5 @@ void loop()
     {
         tempCheck.run();
     }
-    dc.printFloat(sensors.get_temp_sensor()->reading);
+    dc.printCurrentSensor();
 }
