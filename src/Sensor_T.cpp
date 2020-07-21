@@ -5,27 +5,28 @@
 #include "Sensor_T.hpp"
 
 
-Sensor_T::Sensor_T(float reading, char type, char unit, uint8_t precision, uint8_t length, OneWire &oneWire):
-    Sensor(reading, type, unit, precision, length), dt(&oneWire) {}
+Sensor_T::Sensor_T(uint8_t sensorId, char sensorType, float reading, char readingType, char unit, uint8_t precision, uint8_t length, OneWire &oneWire):
+    Sensor(sensorId, sensorType, reading, readingType, unit, precision, length), dt(&oneWire) {}
 
-void Sensor_T::set_reading()
+void Sensor_T::run()
 {
     dt.setWaitForConversion(false);  // makes it async
     dt.requestTemperatures();
     dt.setWaitForConversion(true);
-    if (unit == 'c')
+    if (data.unit == 'c')
     {
-        reading = dt.getTempC(probe);
+        data.reading = dt.getTempC(probe);
     } else
     {
-        reading = dt.getTempF(probe);
+        data.reading = dt.getTempF(probe);
     }
+    runned();
 }
 
 void Sensor_T::switch_units()
 {
-    if(unit == 'f')
-        unit = 'c';
-    else if(unit == 'c')
-        unit = 'f';
+    if(data.unit == 'f')
+        data.unit = 'c';
+    else if(data.unit == 'c')
+        data.unit = 'f';
 }

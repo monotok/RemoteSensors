@@ -6,26 +6,34 @@
 #define REMOTESENSORS_SENSOR_HPP
 
 #include <stdint-gcc.h>
+#include <Thread.h>
 
-class Sensor
+class Sensor: public Thread
 {
 protected:
-    Sensor(float reading, char type, char unit, uint8_t precision, uint8_t length):
-            reading(reading), type(type), unit(unit), precision(precision), length(length) {}
+    Sensor(uint8_t sensorId, char sensorType, float reading, char type, char unit, uint8_t precision, uint8_t length):
+            data(sensorId, sensorType, reading, type, unit, precision, length) {}
     virtual ~Sensor() = default;
-    virtual void set_reading() = 0;
+    virtual void run() = 0;
     virtual void switch_units() = 0;
 
-    float reading;
-    char type;
-    char unit;
-    uint8_t precision;
-    uint8_t length;
-
 public:
-    float get_reading() const { return this->reading; }
-    char get_type() const { return this->type; };
-    char get_unit() const { return this->unit; };
+    struct SensorData {
+        uint8_t sensorId;
+        char sensorType;
+        float reading;
+        char readingType;
+        char unit;
+        uint8_t precision;
+        uint8_t length;
+        SensorData() = default;
+        SensorData(uint8_t sensorId, char sensorType, float reading, char type, char unit, uint8_t precision, uint8_t length):
+                sensorId(sensorId), sensorType(sensorType), reading(reading), readingType(type), unit(unit), precision(precision), length(length) {}
+    } data;
+
+    float get_reading() const { return data.reading; }
+    SensorData get_data() const { return data; }
+
 
 };
 

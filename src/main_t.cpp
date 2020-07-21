@@ -14,6 +14,7 @@
  * then we have width of reading. eg: 4
  * then we have precision of reading (values after the dot if a float, if int then set to 0) eg: 2
  * next is the reading, in this case it is 4 long. 2345
+ * lastly we have the reading unit eg: c or f
  *
  * Full example of sensor with 2x temp, 1 pressure sensor, 1 humidity sensor, 1 air quality
  *
@@ -23,9 +24,11 @@
 #include <Arduino.h>
 #include <DisplayController.hpp>
 #include <Thread.h>
+#include <ThreadController.h>
 #include "BtnController.hpp"
 #include "Sensor_T.hpp"
 #include <Battery.hpp>
+#include <Transit.hpp>
 
 #define PUSH_BTN_PIN 10
 #define ONE_WIRE_BUS 9
@@ -33,15 +36,18 @@
 // Declare classes here so they are in scope of loop method
 BtnController pushBtn1;
 DisplayController dc;
-Thread tempCheck = Thread();
+ThreadController controller = ThreadController();
 OneWire oneWire(ONE_WIRE_BUS);
+Transit rf(5,11);
 
 // Enable sensors based on build flags
 Battery battery = Battery(0.0, 5.0, 1.0, 6);
-Sensor_T temperature = Sensor_T(0, 't', 'c', 2, 4, oneWire);
-Sensor_T temperature2 = Sensor_T(33.76, 't', 'c', 2, 4, oneWire);
+Sensor_T temperature = Sensor_T(1,'t', 0, 'f', 'c', 2, 4, oneWire);
+Sensor_T temperature2 = Sensor_T(1,'t', 33.76, 'f', 'c', 2, 4, oneWire);
 
-
+// Add sensors to transmit via RF. Done this way so we can send each sensor individually in a short burst.
+Thread rf_t1 = Thread();
+Thread rf_t2 = Thread();
 
 void setup()
 {
@@ -51,10 +57,23 @@ void setup()
     dc.addSensorToDisplay(&temperature);
     dc.addSensorToDisplay(&temperature2);
 
+    temperature.setInterval(10);
+//    temperature2.setInterval(10000);
+    rf_t1.setInterval(20000); // Setts the wanted interval to be 10ms
+    rf_t1.onRun([](){ rf.transmitSensor(&temperature); });
+    rf_t2.setInterval(30000); // Setts the wanted interval to be 10ms
+    rf_t2.onRun([](){ rf.transmitSensor(&temperature2); });
 
-    tempCheck.enabled = true; // Default enabled value is true
-    tempCheck.setInterval(8); // Setts the wanted interval to be 10ms
-    tempCheck.onRun([](){ temperature.set_reading(); });
+    controller.add(&temperature);
+//    controller.add(&temperature2);
+    controller.add(&rf_t1);
+    controller.add(&rf_t2);
+
+//    randomSeed(analogRead(A0));  //initialize the random number generator with
+//    //a random read from an unused and floating analog port
+//    //to be able to transmit over rf at random times
+//    unsigned long randNumber = random(10,20); //1 to 2 minutes to delay
+
 }
 
 void loop()
@@ -67,9 +86,8 @@ void loop()
         pushBtn1.updateLastDebounceTime();
     }
     pushBtn1.reInitBtnState();
-    if(tempCheck.shouldRun())
-    {
-        tempCheck.run();
-    }
+
+    controller.run();
+
     dc.printCurrentSensor();
 }
