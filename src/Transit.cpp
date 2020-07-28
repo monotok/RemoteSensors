@@ -6,7 +6,14 @@
 
 void Transit::transmitSensor(Sensor *sensorToTransmit)
 {
+    digitalWrite(ledPin, HIGH);
+    Radio.send((uint8_t *)&sensorToTransmit->data, sizeof(Sensor::data));
     Radio.waitPacketSent();
-    Radio.send((uint8_t *)&sensorToTransmit->data, sizeof(Sensor::SensorData));
+    digitalWrite(ledPin, LOW);
+}
+
+void Transit::initialiseTransit()
+{
+    Radio.init();
 }
 

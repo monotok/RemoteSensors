@@ -57,11 +57,13 @@ void setup()
     dc.addSensorToDisplay(&temperature);
     dc.addSensorToDisplay(&temperature2);
 
+    rf.initialiseTransit();
+
     temperature.setInterval(10);
 //    temperature2.setInterval(10000);
-    rf_t1.setInterval(20000); // Setts the wanted interval to be 10ms
+    rf_t1.setInterval(10000); // Setts the wanted interval to be 10ms
     rf_t1.onRun([](){ rf.transmitSensor(&temperature); });
-    rf_t2.setInterval(30000); // Setts the wanted interval to be 10ms
+    rf_t2.setInterval(20000); // Setts the wanted interval to be 10ms
     rf_t2.onRun([](){ rf.transmitSensor(&temperature2); });
 
     controller.add(&temperature);
