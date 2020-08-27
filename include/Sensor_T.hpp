@@ -11,7 +11,7 @@
 class Sensor_T : public Sensor
 {
 public:
-    Sensor_T(uint8_t sensorId, char sensorType, float reading, char readingType, char unit, uint8_t precision, uint8_t length, OneWire &oneWire);
+    Sensor_T(float sensorId, const char *sensorType, float reading, const char *unit, OneWire &oneWire);
     void run() override;
     void switch_units() override;
 

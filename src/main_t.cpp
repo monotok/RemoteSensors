@@ -42,8 +42,8 @@ Transit rf(5,11);
 
 // Enable sensors based on build flags
 Battery battery = Battery(0.0, 5.0, 1.0, 6);
-Sensor_T temperature = Sensor_T(1,'t', 0, 'f', 'c', 2, 4, oneWire);
-Sensor_T temperature2 = Sensor_T(1,'t', 33.76, 'f', 'c', 2, 4, oneWire);
+Sensor_T temperature = Sensor_T(1.0,"tmp", 0, "cel", oneWire);
+Sensor_T temperature2 = Sensor_T(1.1,"tmp", 33.76, "cel", oneWire);
 
 // Add sensors to transmit via RF. Done this way so we can send each sensor individually in a short burst.
 Thread rf_t1 = Thread();
