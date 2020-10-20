@@ -5,7 +5,7 @@
 #include "Sensor_T.hpp"
 
 
-Sensor_T::Sensor_T(float sensorId, const char *sensorType, float reading, const char *unit, OneWire &oneWire):
+Sensor_T::Sensor_T(const char *sensorId, const char *sensorType, float reading, const char *unit, OneWire &oneWire):
     Sensor(sensorId, sensorType, reading, unit), dt(&oneWire) {}
 
 void Sensor_T::run()

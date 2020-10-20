@@ -11,7 +11,7 @@
 class Sensor: public Thread
 {
 protected:
-    Sensor(float sensorId, const char *sensorType, float reading, const char *unit):
+    Sensor(const char *sensorId, const char *sensorType, float reading, const char *unit):
             data(sensorId, sensorType, reading, unit) {}
     virtual ~Sensor() = default;
     virtual void run() = 0;
@@ -19,15 +19,15 @@ protected:
 
 public:
     struct SensorData {
-        float sensorId;
+        char sensorId[4] = {};
         char sensorType[4] = {};
         float reading;
         char unit[4] = {};
         SensorData() = default;
-        SensorData(float sensorId, const char *sensorType, float reading, const char *unit):
-                sensorId(sensorId), reading(reading) {
+        SensorData(const char *sensorId, const char *sensorType, float reading, const char *unit): reading(reading) {
             strcpy(this->unit, unit);
             strcpy(this->sensorType, sensorType);
+            strcpy(this->sensorId, sensorId);
         }
     } data;
 
