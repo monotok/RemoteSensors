@@ -11,13 +11,13 @@ DisplayController::DisplayController() : fbd(8,4,3) { }
 
 void DisplayController::initialiseDisplay()
 {
-    fbd.printToDisplay("////",4,"r");
+    fbd.printToDisplay("////",4,"l");
 }
 
 void DisplayController::printFloat(float val)
 {
     dtostrf(val, 4, 2, buf);
-    fbd.printToDisplay(buf, strlen(buf), "r");
+    fbd.printToDisplay(buf, strlen(buf), "l");
 }
 
 void DisplayController::printCurrentSensor()
