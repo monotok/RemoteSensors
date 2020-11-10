@@ -12,7 +12,7 @@
 class DisplayController
 {
 public:
-    DisplayController();
+    DisplayController(short rclkPin, short sclkPin, short dioPin);
     void initialiseDisplay();
     void printFloat(float val);
     void printCurrentSensor();

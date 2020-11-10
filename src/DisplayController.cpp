@@ -7,7 +7,7 @@
 #include <Battery.hpp>
 #include "DisplayController.hpp"
 
-DisplayController::DisplayController() : fbd(8,4,3) { }
+DisplayController::DisplayController(short rclkPin, short sclkPin, short dioPin) : fbd(rclkPin, sclkPin, dioPin) { }
 
 void DisplayController::initialiseDisplay()
 {
