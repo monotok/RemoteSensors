@@ -31,12 +31,20 @@
 #include <Transit.hpp>
 #include "OneWireDiscovery.hpp"
 
-#define PUSH_BTN_PIN 10
+#define PUSH_BTN_PIN A2
 #define ONE_WIRE_BUS 9
+#define TRANSIT_LED_PIN A3 //17
+#define ERR_LED_PIN A4 //18
+
+// Radio
+#define RFM69_INT     3
+#define RFM69_CS      2
+#define RFM69_RST     7
+#define RF69_FREQ 868.0
 
 // Declare classes here so they are in scope of loop method
 BtnController pushBtn1;
-DisplayController dc;
+DisplayController dc(8,4,5);
 ThreadController controller = ThreadController();
 OneWire oneWire(ONE_WIRE_BUS);
 OneWireDiscovery owd(oneWire, ERR_LED_PIN);
@@ -79,11 +87,6 @@ void setup()
     controller.add(&rf_t1);
     controller.add(&rf_t2);
     controller.add(&rf_b1);
-
-//    randomSeed(analogRead(A0));  //initialize the random number generator with
-//    //a random read from an unused and floating analog port
-//    //to be able to transmit over rf at random times
-//    unsigned long randNumber = random(10,20); //1 to 2 minutes to delay
 
 }
 
