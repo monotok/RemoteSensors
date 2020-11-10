@@ -28,7 +28,7 @@ void DisplayController::printCurrentSensor()
 void DisplayController::displayNext()
 {
     currentSensorIndex ++;
-    if (currentSensorIndex > 9)
+    if (currentSensorIndex > 7)
         currentSensorIndex = 0;
     if (sensorsDisplayed[currentSensorIndex] == nullptr)
         currentSensorIndex = 0;
@@ -52,11 +52,6 @@ Sensor* DisplayController::getCurrentSensor()
 {
     return currentSensor;
 }
-
-//void DisplayController::addBatteryDisplay(Battery *b)
-//{
-//    battery = b;
-//}
 
 
 

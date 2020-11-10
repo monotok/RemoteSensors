@@ -41,13 +41,14 @@ OneWire oneWire(ONE_WIRE_BUS);
 Transit rf(5,11);
 
 // Enable sensors based on build flags
-Battery battery = Battery(0.0, 5.0, 1.0, 6);
-Sensor_T temperature = Sensor_T(1.0,"tmp", 0, "cel", oneWire);
-Sensor_T temperature2 = Sensor_T(1.1,"tmp", 33.76, "cel", oneWire);
+Sensor_T temperature = Sensor_T("1.0","tmp", 0, "cel", oneWire, owd);
+Sensor_T temperature2 = Sensor_T("1.1","tmp", 33.76, "cel", oneWire, owd);
+Battery battery = Battery("1.2", "batt", 100, "per", 0.0, 5.0, 1.0, ERR_LED_PIN);
 
 // Add sensors to transmit via RF. Done this way so we can send each sensor individually in a short burst.
 Thread rf_t1 = Thread();
 Thread rf_t2 = Thread();
+Thread rf_b1 = Thread();
 
 void setup()
 {
@@ -56,20 +57,26 @@ void setup()
     dc.initialiseDisplay();
     dc.addSensorToDisplay(&temperature);
     dc.addSensorToDisplay(&temperature2);
+    dc.addSensorToDisplay(&battery);
 
     rf.initialiseTransit();
 
     temperature.setInterval(10);
-//    temperature2.setInterval(10000);
-    rf_t1.setInterval(10000); // Setts the wanted interval to be 10ms
+    temperature2.setInterval(5000);
+    battery.setInterval(60000); // 60s 3600000 1 Hour
+    rf_t1.setInterval(10000); // Setts the wanted interval to be 10s
     rf_t1.onRun([](){ rf.transmitSensor(&temperature); });
-    rf_t2.setInterval(20000); // Setts the wanted interval to be 10ms
+    rf_t2.setInterval(20000); // Setts the wanted interval to be 20s
     rf_t2.onRun([](){ rf.transmitSensor(&temperature2); });
+    rf_b1.setInterval(3600000); // Setts the wanted interval to be 1 hour
+    rf_b1.onRun([](){ rf.transmitSensor(&battery); });
 
     controller.add(&temperature);
-//    controller.add(&temperature2);
+    controller.add(&temperature2);
+    controller.add(&battery);
     controller.add(&rf_t1);
     controller.add(&rf_t2);
+    controller.add(&rf_b1);
 
 //    randomSeed(analogRead(A0));  //initialize the random number generator with
 //    //a random read from an unused and floating analog port

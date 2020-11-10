@@ -19,7 +19,6 @@ public:
     void displayNext();
     void addSensorToDisplay(Sensor *sensorToDisplay);
     Sensor* getCurrentSensor();
-//    void addBatteryDisplay(Battery *b);
 
 private:
     FourBitDisplay fbd;
