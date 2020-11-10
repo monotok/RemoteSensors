@@ -29,6 +29,7 @@
 #include "Sensor_T.hpp"
 #include <Battery.hpp>
 #include <Transit.hpp>
+#include "OneWireDiscovery.hpp"
 
 #define PUSH_BTN_PIN 10
 #define ONE_WIRE_BUS 9
@@ -38,7 +39,8 @@ BtnController pushBtn1;
 DisplayController dc;
 ThreadController controller = ThreadController();
 OneWire oneWire(ONE_WIRE_BUS);
-Transit rf(5,11);
+OneWireDiscovery owd(oneWire, ERR_LED_PIN);
+Transit rf(TRANSIT_LED_PIN, ERR_LED_PIN, RFM69_CS, RFM69_INT, RFM69_RST, RF69_FREQ);
 
 // Enable sensors based on build flags
 Sensor_T temperature = Sensor_T("1.0","tmp", 0, "cel", oneWire, owd);
