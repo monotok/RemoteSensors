@@ -5,8 +5,10 @@
 #include "Sensor_T.hpp"
 
 
-Sensor_T::Sensor_T(const char *sensorId, const char *sensorType, float reading, const char *unit, OneWire &oneWire):
-    Sensor(sensorId, sensorType, reading, unit), dt(&oneWire) {}
+Sensor_T::Sensor_T(const char *sensorId, const char *sensorType, float reading, const char *unit, OneWire &oneWire, OneWireDiscovery& owd):
+    Sensor(sensorId, sensorType, reading, unit), dt(&oneWire), owd(owd) {
+    getOneWireAddress();
+}
 
 void Sensor_T::run()
 {
@@ -30,3 +32,12 @@ void Sensor_T::switch_units()
     else if(strcmp(data.unit, "cel") == 0)
         strcpy(data.unit, "far");
 }
+
+void Sensor_T::getOneWireAddress()
+{
+    uint8_t* tmp = owd.discoverNextOneWireDevice();
+    for (int i = 0; i < 8; ++i) {
+        probe[i] = *(tmp+i);
+    }
+}
+
