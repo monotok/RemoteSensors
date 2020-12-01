@@ -51,9 +51,9 @@ OneWireDiscovery owd(oneWire, ERR_LED_PIN);
 Transit rf(TRANSIT_LED_PIN, ERR_LED_PIN, RFM69_CS, RFM69_INT, RFM69_RST, RF69_FREQ);
 
 // Enable sensors based on build flags
-Sensor_T temperature = Sensor_T("1.0","tmp", 0, "cel", oneWire, owd);
-Sensor_T temperature2 = Sensor_T("1.1","tmp", 33.76, "cel", oneWire, owd);
-Battery battery = Battery("1.2", "batt", 100, "per", 0.0, 5.0, 1.0, ERR_LED_PIN);
+Sensor_T temperature = Sensor_T("2.0","tmp", 0, "cel", oneWire, owd);
+Sensor_T temperature2 = Sensor_T("2.1","tmp", 33.76, "cel", oneWire, owd);
+Battery battery = Battery("2.2", "batt", 100, "per", 0.0, 5.0, 1.0, ERR_LED_PIN);
 
 // Add sensors to transmit via RF. Done this way so we can send each sensor individually in a short burst.
 Thread rf_t1 = Thread();
