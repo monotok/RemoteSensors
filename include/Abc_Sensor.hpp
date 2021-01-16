@@ -11,22 +11,17 @@
 class Sensor: public Thread
 {
 protected:
-    Sensor(const char *sensorId, const char *sensorType, float reading, const char *unit):
-            data(sensorId, sensorType, reading, unit) {}
+    Sensor(const char *sensorId, float reading):
+            data(sensorId, reading) {}
     virtual ~Sensor() = default;
     virtual void run() = 0;
-    virtual void switch_units() = 0;
 
 public:
     struct SensorData {
         char sensorId[4] = {};
-        char sensorType[4] = {};
         float reading;
-        char unit[4] = {};
         SensorData() = default;
-        SensorData(const char *sensorId, const char *sensorType, float reading, const char *unit): reading(reading) {
-            strcpy(this->unit, unit);
-            strcpy(this->sensorType, sensorType);
+        SensorData(const char *sensorId, float reading): reading(reading) {
             strcpy(this->sensorId, sensorId);
         }
     } data;

@@ -11,10 +11,9 @@
 class Battery: public Sensor
 {
 public:
-    Battery(const char *sensorId, const char *sensorType, float reading, const char *unit, float min, float max, float correction, int pin):
-            Sensor(sensorId, sensorType, reading, unit), vcc(correction), VccMin(min), VccMax(max), lowBatteryPin(pin) {}
+    Battery(const char *sensorId, float reading, float min, float max, float correction, int pin):
+            Sensor(sensorId, reading), vcc(correction), VccMin(min), VccMax(max), lowBatteryPin(pin) {}
     void run() override;
-    void switch_units() override;
 
     float checkBatteryRemaining();
     void setLowBatteryWarningLevel(float percent);
