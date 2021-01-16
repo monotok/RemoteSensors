@@ -5,8 +5,8 @@
 #include "Sensor_T.hpp"
 
 
-Sensor_T::Sensor_T(const char *sensorId, const char *sensorType, float reading, const char *unit, OneWire &oneWire, OneWireDiscovery& owd):
-    Sensor(sensorId, sensorType, reading, unit), dt(&oneWire), owd(owd) {
+Sensor_T::Sensor_T(const char *sensorId, float reading, OneWire &oneWire, OneWireDiscovery& owd):
+    Sensor(sensorId, reading), dt(&oneWire), owd(owd) {
     getOneWireAddress();
 }
 
@@ -15,23 +15,10 @@ void Sensor_T::run()
     dt.setWaitForConversion(false);  // makes it async
     dt.requestTemperatures();
     dt.setWaitForConversion(true);
-    if (strcmp(data.unit, "cel") == 0)
-    {
-        data.reading = dt.getTempC(probe);
-    } else
-    {
-        data.reading = dt.getTempF(probe);
-    }
+    data.reading = dt.getTempC(probe);
     runned();
 }
 
-void Sensor_T::switch_units()
-{
-    if(strcmp(data.unit, "far") == 0)
-        strcpy(data.unit, "cel");
-    else if(strcmp(data.unit, "cel") == 0)
-        strcpy(data.unit, "far");
-}
 
 void Sensor_T::getOneWireAddress()
 {

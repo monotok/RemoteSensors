@@ -51,14 +51,12 @@ OneWireDiscovery owd(oneWire, ERR_LED_PIN);
 Transit rf(TRANSIT_LED_PIN, ERR_LED_PIN, RFM69_CS, RFM69_INT, RFM69_RST, RF69_FREQ);
 
 // Enable sensors based on build flags
-Sensor_T temperature = Sensor_T("2.0","tmp", 0, "cel", oneWire, owd);
-Sensor_T temperature2 = Sensor_T("2.1","tmp", 33.76, "cel", oneWire, owd);
-Battery battery = Battery("2.2", "batt", 100, "per", 0.0, 5.0, 1.0, ERR_LED_PIN);
+Sensor_T temperature = Sensor_T("2.0", 0, oneWire, owd);
+Sensor_T temperature2 = Sensor_T("2.1", 0, oneWire, owd);
 
 // Add sensors to transmit via RF. Done this way so we can send each sensor individually in a short burst.
 Thread rf_t1 = Thread();
 Thread rf_t2 = Thread();
-Thread rf_b1 = Thread();
 
 void setup()
 {
@@ -67,26 +65,23 @@ void setup()
     dc.initialiseDisplay();
     dc.addSensorToDisplay(&temperature);
     dc.addSensorToDisplay(&temperature2);
-    dc.addSensorToDisplay(&battery);
 
     rf.initialiseTransit();
 
     temperature.setInterval(10);
     temperature2.setInterval(5000);
-    battery.setInterval(60000); // 60s 3600000 1 Hour
-    rf_t1.setInterval(10000); // Setts the wanted interval to be 10s
+
+    rf_t1.setInterval(60000); // Setts the wanted interval to be 10s
     rf_t1.onRun([](){ rf.transmitSensor(&temperature); });
-    rf_t2.setInterval(20000); // Setts the wanted interval to be 20s
+    rf_t2.setInterval(65000); // Setts the wanted interval to be 20s
     rf_t2.onRun([](){ rf.transmitSensor(&temperature2); });
-    rf_b1.setInterval(3600000); // Setts the wanted interval to be 1 hour
-    rf_b1.onRun([](){ rf.transmitSensor(&battery); });
 
     controller.add(&temperature);
     controller.add(&temperature2);
-    controller.add(&battery);
+
     controller.add(&rf_t1);
     controller.add(&rf_t2);
-    controller.add(&rf_b1);
+
 
 }
 

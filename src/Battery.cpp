@@ -24,7 +24,3 @@ void Battery::run()
     data.reading = checkBatteryRemaining();
     runned();
 }
-
-void Battery::switch_units()
-{
-}
